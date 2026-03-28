@@ -392,6 +392,150 @@ p {
   margin-bottom: 10px;
 }
 
+/* CAROUSEL */ 
+
+.nexortek-carousel {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.28);
+}
+
+.nexortek-carousel__track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.nexortek-carousel__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: scale(1.02);
+}
+
+.nexortek-carousel__slide.active {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  z-index: 2;
+}
+
+.nexortek-carousel__slide img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  display: block;
+}
+
+.nexortek-carousel__caption {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  padding: 20px;
+  border-radius: 20px;
+  background: rgba(5, 8, 22, 0.72);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nexortek-carousel__caption h3 {
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.nexortek-carousel__caption p {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-soft);
+}
+
+.nexortek-carousel__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(5, 8, 22, 0.72);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: 0.25s ease;
+  z-index: 3;
+}
+
+.nexortek-carousel__btn:hover {
+  background: rgba(47, 107, 255, 0.9);
+  border-color: rgba(47, 107, 255, 0.9);
+}
+
+.nexortek-carousel__btn.prev {
+  left: 16px;
+}
+
+.nexortek-carousel__btn.next {
+  right: 16px;
+}
+
+.nexortek-carousel__dots {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 4;
+}
+
+.nexortek-carousel__dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.nexortek-carousel__dots .dot.active {
+  width: 28px;
+  background: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+  .nexortek-carousel {
+    min-height: 420px;
+  }
+
+  .nexortek-carousel__slide img {
+    height: 420px;
+  }
+
+  .nexortek-carousel__caption {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    padding: 16px;
+  }
+
+  .nexortek-carousel__btn {
+    width: 42px;
+    height: 42px;
+  }
+}
+
 /* CONTACT */
 
 .nexortek__contact__title {
