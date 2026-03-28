@@ -1,69 +1,157 @@
-const carousel = document.querySelector(".nexortek-carousel");
+document.addEventListener("DOMContentLoaded", () => {
+  const carousel = document.querySelector(".nexortek-carousel");
+  if (!carousel) return;
 
-if (carousel) {
-  const slides = carousel.querySelectorAll(".nexortek-carousel__slide");
-  const dots = carousel.querySelectorAll(".dot");
-  const prevBtn = carousel.querySelector(".prev");
-  const nextBtn = carousel.querySelector(".next");
+  const slides = Array.from(
+    carousel.querySelectorAll(".nexortek-carousel__slide")
+  );
+  const dots = Array.from(
+    carousel.querySelectorAll(".nexortek-carousel__dots .dot")
+  );
+  const prevBtn = carousel.querySelector(".nexortek-carousel__btn.prev");
+  const nextBtn = carousel.querySelector(".nexortek-carousel__btn.next");
+
+  if (!slides.length) return;
 
   let currentSlide = 0;
-  let autoPlay;
+  let autoPlayInterval = null;
+  let autoPlayStoppedByUser = false;
+  let isTransitioning = false;
 
-  function showSlide(index) {
+  const AUTO_PLAY_DELAY = 5000;
+  const TRANSITION_LOCK = 550;
+
+  function updateCarousel(index) {
     slides.forEach((slide, i) => {
       slide.classList.toggle("active", i === index);
+      slide.setAttribute("aria-hidden", i === index ? "false" : "true");
     });
 
     dots.forEach((dot, i) => {
       dot.classList.toggle("active", i === index);
+      dot.setAttribute("aria-current", i === index ? "true" : "false");
     });
 
     currentSlide = index;
   }
 
+  function goToSlide(index) {
+    if (isTransitioning) return;
+
+    isTransitioning = true;
+    updateCarousel(index);
+
+    setTimeout(() => {
+      isTransitioning = false;
+    }, TRANSITION_LOCK);
+  }
+
   function nextSlide() {
     const nextIndex = (currentSlide + 1) % slides.length;
-    showSlide(nextIndex);
+    goToSlide(nextIndex);
   }
 
   function prevSlide() {
     const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(prevIndex);
+    goToSlide(prevIndex);
   }
 
   function startAutoPlay() {
-    autoPlay = setInterval(() => {
+    if (autoPlayStoppedByUser) return;
+    stopAutoPlay();
+
+    autoPlayInterval = setInterval(() => {
       nextSlide();
-    }, 5000);
+    }, AUTO_PLAY_DELAY);
   }
 
   function stopAutoPlay() {
-    clearInterval(autoPlay);
+    if (autoPlayInterval) {
+      clearInterval(autoPlayInterval);
+      autoPlayInterval = null;
+    }
   }
 
-  nextBtn.addEventListener("click", () => {
+  function stopAutoPlayForever() {
+    autoPlayStoppedByUser = true;
     stopAutoPlay();
-    nextSlide();
-    startAutoPlay();
-  });
+  }
 
-  prevBtn.addEventListener("click", () => {
-    stopAutoPlay();
-    prevSlide();
-    startAutoPlay();
-  });
+  if (nextBtn) {
+    nextBtn.addEventListener("click", () => {
+      stopAutoPlayForever();
+      nextSlide();
+    });
+  }
 
-  dots.forEach((dot) => {
+  if (prevBtn) {
+    prevBtn.addEventListener("click", () => {
+      stopAutoPlayForever();
+      prevSlide();
+    });
+  }
+
+  dots.forEach((dot, index) => {
     dot.addEventListener("click", () => {
-      stopAutoPlay();
-      showSlide(Number(dot.dataset.slide));
-      startAutoPlay();
+      stopAutoPlayForever();
+      goToSlide(index);
     });
   });
 
-  carousel.addEventListener("mouseenter", stopAutoPlay);
-  carousel.addEventListener("mouseleave", startAutoPlay);
+  carousel.addEventListener("mouseenter", () => {
+    if (!autoPlayStoppedByUser) stopAutoPlay();
+  });
 
-  showSlide(0);
+  carousel.addEventListener("mouseleave", () => {
+    if (!autoPlayStoppedByUser) startAutoPlay();
+  });
+
+  // Suporte para swipe no mobile
+  let touchStartX = 0;
+  let touchEndX = 0;
+
+  carousel.addEventListener(
+    "touchstart",
+    (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    },
+    { passive: true }
+  );
+
+  carousel.addEventListener(
+    "touchend",
+    (e) => {
+      touchEndX = e.changedTouches[0].clientX;
+      const distance = touchEndX - touchStartX;
+      const minSwipeDistance = 50;
+
+      if (Math.abs(distance) < minSwipeDistance) return;
+
+      stopAutoPlayForever();
+
+      if (distance < 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    },
+    { passive: true }
+  );
+
+  // Navegação por teclado
+  carousel.setAttribute("tabindex", "0");
+  carousel.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") {
+      stopAutoPlayForever();
+      nextSlide();
+    }
+
+    if (e.key === "ArrowLeft") {
+      stopAutoPlayForever();
+      prevSlide();
+    }
+  });
+
+  updateCarousel(0);
   startAutoPlay();
-}
+});
