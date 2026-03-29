@@ -619,6 +619,10 @@ textarea:focus {
   width: 100%;
 }
 
+.input-field select {
+    background-color: #2457d6;
+}
+
 .input-field--full {
   grid-column: 1 / -1;
 }
