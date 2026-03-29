@@ -558,24 +558,6 @@ p {
   margin: 0 auto;
 }
 
-.nexortek__form {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-l);
-  padding: 36px;
-  backdrop-filter: blur(12px);
-}
-
-.nexortek__form-inputs__wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-}
-
-.input-field {
-  width: 100%;
-}
-
 .input-field:last-child,
 .nexortek__form-info {
   grid-column: 1 / -1;
@@ -613,16 +595,115 @@ textarea:focus {
   box-shadow: 0 0 0 4px rgba(47, 107, 255, 0.12);
 }
 
-.nexortek__form-info {
-  font-size: 14px;
-  color: rgba(255,255,255,0.55);
-}
-
 .form-actions__buttons {
   margin-top: 24px;
   display: flex;
   justify-content: center;
 }
+.nexortek__form {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-l);
+  padding: 36px;
+  backdrop-filter: blur(12px);
+  width: 100%;
+}
+
+.nexortek__form-inputs__wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.input-field--full {
+  grid-column: 1 / -1;
+}
+
+.nexortek__form input,
+.nexortek__form select,
+.nexortek__form textarea {
+  width: 100%;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: var(--text-color);
+  border-radius: 18px;
+  padding: 18px;
+  outline: none;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  transition: 0.25s ease;
+}
+
+.nexortek__form textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.nexortek__form input::placeholder,
+.nexortek__form textarea::placeholder {
+  color: rgba(255,255,255,0.4);
+}
+
+.nexortek__form input:focus,
+.nexortek__form select:focus,
+.nexortek__form textarea:focus {
+  border-color: rgba(143, 178, 255, 0.6);
+  box-shadow: 0 0 0 4px rgba(47, 107, 255, 0.12);
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nexortek__form-info {
+  min-height: 24px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+}
+
+.nexortek__form-info.is-error {
+  color: #ff7b7b;
+}
+
+.nexortek__form-info.is-success {
+  color: #7dffa6;
+}
+
+.form-actions__buttons--static {
+  position: static;
+  transform: none;
+  left: auto;
+  bottom: auto;
+  margin-top: 24px;
+}
+
+#submitBtn[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .nexortek__form {
+    padding: 24px;
+  }
+
+  .nexortek__form-inputs__wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  .input-field--full {
+    grid-column: auto;
+  }
+}
+
 
 /* FOOTER */
 

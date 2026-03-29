@@ -210,59 +210,85 @@
 
     <!-- CONTACT -->
     <div class="nexortek__contact section" id="contact">
-      <div class="nexortek__contact__wrapper">
-        <div class="nexortek__contact__title">
-          <h2 class="montserrat bold">Vamos trabalhar juntos?</h2>
-          <p>
-            Se queres melhorar a imagem digital do teu negócio, preencher este formulário é o primeiro passo.
-          </p>
-        </div>
-
-        <div class="form-container">
-          <div class="nexortek__form form-section form-section--active">
-            <div class="nexortek__form-inputs__wrapper">
-              <div class="input-field">
-                <input type="text" id="name" name="name" placeholder="Nome" />
-              </div>
-
-              <div class="input-field">
-                <input type="text" id="business" name="business" placeholder="Nome do negócio" />
-              </div>
-
-              <div class="input-field">
-                <input type="email" id="email" name="email" placeholder="Email" />
-              </div>
-
-              <div class="input-field">
-                <input type="text" id="phone" name="phone" placeholder="Telefone" />
-              </div>
-
-              <div class="input-field">
-                <select id="service" name="service">
-                  <option value="">Serviço pretendido</option>
-                  <option value="website">Website profissional</option>
-                  <option value="google">Presença no Google</option>
-                  <option value="marketing">Marketing com impacto</option>
-                  <option value="strategy">Estratégia digital</option>
-                  <option value="other">Outro</option>
-                </select>
-              </div>
-
-              <div class="input-field">
-                <textarea id="message" name="message" placeholder="Fala-nos sobre o teu projeto"></textarea>
-              </div>
-
-              <p class="nexortek__form-info montserrat">
-                Estes dados serão usados apenas para entrarmos em contacto contigo.
-              </p>
+        <div class="nexortek__contact__wrapper">
+            <div class="nexortek__contact__title">
+            <h2 class="montserrat bold">Vamos trabalhar juntos?</h2>
+            <p>
+                Se queres melhorar a presença digital do teu negócio, preenche o formulário abaixo.
+            </p>
             </div>
 
-            <div class="form-actions__buttons">
-              <button class="btn btn-primary" onclick="submitForm()">Enviar pedido</button>
+            <div class="form-container">
+            <form id="contactForm" class="nexortek__form" novalidate>
+                <div class="nexortek__form-inputs__wrapper">
+                <div class="input-field">
+                    <input type="text" id="name" name="name" placeholder="Nome" required />
+                </div>
+
+                <div class="input-field">
+                    <input type="text" id="business" name="business" placeholder="Nome do negócio" />
+                </div>
+
+                <div class="input-field">
+                    <input type="email" id="email" name="email" placeholder="Email" required />
+                </div>
+
+                <div class="input-field">
+                    <input type="tel" id="phone" name="phone" placeholder="Telefone" />
+                </div>
+
+                <div class="input-field">
+                    <select id="service" name="service" required>
+                    <option value="">Serviço pretendido</option>
+                    <option value="website">Website profissional</option>
+                    <option value="google">Presença no Google</option>
+                    <option value="marketing">Marketing com impacto</option>
+                    <option value="strategy">Estratégia digital</option>
+                    <option value="other">Outro</option>
+                    </select>
+                </div>
+
+                <div class="input-field input-field--full">
+                    <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Fala-nos sobre o teu projeto"
+                    required
+                    ></textarea>
+                </div>
+
+                <!-- Honeypot -->
+                <div class="hp-field" aria-hidden="true">
+                    <label for="company_website">Não preencher</label>
+                    <input
+                    type="text"
+                    id="company_website"
+                    name="company_website"
+                    tabindex="-1"
+                    autocomplete="off"
+                    />
+                </div>
+
+                <div class="input-field input-field--full">
+                    <div
+                    class="cf-turnstile"
+                    data-sitekey="AQUI_A_TUA_SITE_KEY"
+                    data-theme="dark"
+                    data-action="contact"
+                    ></div>
+                </div>
+
+                <p id="formStatus" class="nexortek__form-info montserrat" aria-live="polite"></p>
+                </div>
+
+                <div class="form-actions__buttons form-actions__buttons--static">
+                <button id="submitBtn" class="btn btn-primary" type="submit">
+                    Enviar pedido
+                </button>
+                </div>
+            </form>
             </div>
-          </div>
         </div>
-      </div>
     </div>
 
     <!-- FOOTER -->
@@ -318,6 +344,7 @@
       alert("Formulário enviado com sucesso.");
     }
   </script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <script src="script.js"></script>
 </body>
 </html>
