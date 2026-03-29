@@ -191,56 +191,63 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.textContent = "A enviar...";
 
     try {
-      const formData = new FormData(form);
+        const formData = new FormData(form);
 
-      const validationError = validateForm(formData);
-      if (validationError) {
-        setStatus(validationError, "is-error");
-        return;
-      }
+        const validationError = validateForm(formData);
+        if (validationError) {
+            setStatus(validationError, "is-error");
+            return;
+        }
 
-      const token = formData.get("cf-turnstile-response");
-      if (!token) {
-        setStatus("Confirma a verificação antes de enviar.", "is-error");
-        return;
-      }
+        const token = formData.get("cf-turnstile-response");
+        if (!token) {
+            setStatus("Confirma a verificação antes de enviar.", "is-error");
+            return;
+        }
 
-      const payload = {
-        name: formData.get("name"),
-        business: formData.get("business"),
-        email: formData.get("email"),
-        phone: formData.get("phone"),
-        service: formData.get("service"),
-        message: formData.get("message"),
-        company_website: formData.get("company_website"),
-        turnstileToken: token,
-      };
+        const payload = {
+            name: formData.get("name"),
+            business: formData.get("business"),
+            email: formData.get("email"),
+            phone: formData.get("phone"),
+            service: formData.get("service"),
+            message: formData.get("message"),
+            company_website: formData.get("company_website"),
+            turnstileToken: token,
+        };
 
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
+        const response = await fetch("/api/contact", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            body: JSON.stringify(payload),
+        });
 
-      const result = await response.json();
+        const raw = await response.text();
+            let result = {};
 
-      if (!response.ok) {
-        throw new Error(result.error || "Não foi possível enviar o formulário.");
-      }
+            try {
+            result = raw ? JSON.parse(raw) : {};
+            } catch (e) {
+            throw new Error(`Resposta inválida do servidor: ${raw || "(vazia)"}`);
+            }
 
-      setStatus("Pedido enviado com sucesso. Vamos responder em breve.", "is-success");
-      form.reset();
+        if (!response.ok) {
+            throw new Error(result.error || "Não foi possível enviar o formulário.");
+        }
 
-      if (window.turnstile) {
-        window.turnstile.reset();
-      }
-    } catch (error) {
-      setStatus(error.message || "Erro ao enviar o formulário.", "is-error");
-    } finally {
-      submitBtn.disabled = false;
-      submitBtn.textContent = "Enviar pedido";
-    }
-  });
+        setStatus("Pedido enviado com sucesso. Vamos responder em breve.", "is-success");
+        form.reset();
+
+        if (window.turnstile) {
+            window.turnstile.reset();
+        }
+        } catch (error) {
+        setStatus(error.message || "Erro ao enviar o formulário.", "is-error");
+        } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Enviar pedido";
+        }
+    });
 });
