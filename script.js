@@ -1,4 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
+
+  // =========================
+  // LOADER
+  // =========================
+  const loader = document.getElementById("loader");
+
+  if (loader) {
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        loader.classList.add("hide");
+      }, 1400);
+    });
+  }
+
   // =========================
   // CARROSSEL
   // =========================
