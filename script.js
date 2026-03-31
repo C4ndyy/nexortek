@@ -216,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
             turnstileToken: token,
         };
 
-        const response = await fetch("/api/contact", {
+        const response = await fetch("/contact", {
             method: "POST",
             headers: {
             "Content-Type": "application/json",
