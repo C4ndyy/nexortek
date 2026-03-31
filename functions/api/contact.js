@@ -11,7 +11,10 @@ async function verifyTurnstile(token, ip, secret) {
   const formData = new URLSearchParams();
   formData.append("secret", secret);
   formData.append("response", token);
-  if (ip && ip !== "unknown") formData.append("remoteip", ip);
+
+  if (ip && ip !== "unknown") {
+    formData.append("remoteip", ip);
+  }
 
   const response = await fetch(
     "https://challenges.cloudflare.com/turnstile/v0/siteverify",
@@ -24,8 +27,6 @@ async function verifyTurnstile(token, ip, secret) {
   return response.json();
 }
 
-
-
 async function testNotionAuth(env) {
   const response = await fetch("https://api.notion.com/v1/users/me", {
     method: "GET",
@@ -35,13 +36,7 @@ async function testNotionAuth(env) {
     },
   });
 
-  const text = await response.text();
-  let data = {};
-  try {
-    data = text ? JSON.parse(text) : {};
-  } catch {
-    throw new Error(`Resposta não-JSON do Notion: ${text}`);
-  }
+  const data = await response.json();
 
   if (!response.ok) {
     throw new Error(
@@ -51,7 +46,7 @@ async function testNotionAuth(env) {
 
   return data;
 }
-/*
+
 async function createNotionLead(env, lead) {
   const response = await fetch("https://api.notion.com/v1/pages", {
     method: "POST",
@@ -125,7 +120,7 @@ async function createNotionLead(env, lead) {
 
   return data;
 }
-*/
+
 async function sendNotificationEmail(env, lead) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -248,6 +243,7 @@ export async function onRequestPost(context) {
 
     return json({
       ok: true,
+      notionUserId: notionAuth.id,
       notionPageId: notionResult.id,
       emailId: emailResult.id,
     });
