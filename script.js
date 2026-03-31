@@ -240,8 +240,9 @@ document.addEventListener("DOMContentLoaded", () => {
         setStatus("Pedido enviado com sucesso. Vamos responder em breve.", "is-success");
         form.reset();
 
-        if (window.turnstile) {
-            window.turnstile.reset();
+        if (window.turnstile && typeof window.turnstile.reset === "function") {
+          const widget = document.querySelector(".cf-turnstile");
+          if (widget) window.turnstile.reset(widget);
         }
         } catch (error) {
         setStatus(error.message || "Erro ao enviar o formulário.", "is-error");
