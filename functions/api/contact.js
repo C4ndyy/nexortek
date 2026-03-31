@@ -1,3 +1,7 @@
+export async function onRequestGet() {
+  return new Response("API contact OK", { status: 200 });
+}
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -62,16 +66,6 @@ export async function onRequestPost(context) {
     if (!turnstileResult.success) {
       return json({ error: "Falha na verificação anti-bot." }, 400);
     }
-
-    // Aqui depois ligas email, Notion, webhook, etc.
-    console.log("Novo contacto:", {
-      name,
-      business,
-      email,
-      phone,
-      service,
-      message,
-    });
 
     return json({ ok: true }, 200);
   } catch (error) {
