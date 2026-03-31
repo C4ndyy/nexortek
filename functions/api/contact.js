@@ -24,6 +24,34 @@ async function verifyTurnstile(token, ip, secret) {
   return response.json();
 }
 
+
+
+async function testNotionAuth(env) {
+  const response = await fetch("https://api.notion.com/v1/users/me", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${env.NOTION_TOKEN}`,
+      "Notion-Version": "2022-06-28",
+    },
+  });
+
+  const text = await response.text();
+  let data = {};
+  try {
+    data = text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error(`Resposta não-JSON do Notion: ${text}`);
+  }
+
+  if (!response.ok) {
+    throw new Error(
+      `Notion auth falhou: ${response.status} ${data.code || ""} ${data.message || ""}`.trim()
+    );
+  }
+
+  return data;
+}
+/*
 async function createNotionLead(env, lead) {
   const response = await fetch("https://api.notion.com/v1/pages", {
     method: "POST",
@@ -97,7 +125,7 @@ async function createNotionLead(env, lead) {
 
   return data;
 }
-
+*/
 async function sendNotificationEmail(env, lead) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -210,6 +238,8 @@ export async function onRequestPost(context) {
       service: service.trim(),
       message: message.trim(),
     };
+
+    const notionAuth = await testNotionAuth(env);
 
     const [notionResult, emailResult] = await Promise.all([
       createNotionLead(env, lead),
