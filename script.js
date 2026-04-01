@@ -3,14 +3,19 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // LOADER
   // =========================
+  const introStart = Date.now();
+
   window.addEventListener("load", () => {
     const loader = document.getElementById("loader");
+    const minDuration = 2600;
+    const elapsed = Date.now() - introStart;
+    const remaining = Math.max(0, minDuration - elapsed);
 
-    if (loader) {
-      setTimeout(() => {
-        loader.classList.add("hide");
-      }, 1800);
-    }
+    setTimeout(() => {
+      document.body.classList.remove("is-loading");
+      document.body.classList.add("is-ready");
+      if (loader) loader.classList.add("hide");
+    }, remaining);
   });
 
   // =========================

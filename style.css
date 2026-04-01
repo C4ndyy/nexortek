@@ -283,17 +283,21 @@ p {
 }
 
 /* INTRO */
+
 #loader {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 999999;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #0b0b0b;
-  transition: opacity 0.8s ease, visibility 0.8s ease;
+  background:
+    radial-gradient(circle at top left, rgba(47, 107, 255, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(47, 107, 255, 0.1), transparent 25%),
+    var(--bg-color);
   opacity: 1;
   visibility: visible;
+  transition: opacity 0.85s ease, visibility 0.85s ease;
 }
 
 #loader.hide {
@@ -302,77 +306,85 @@ p {
   pointer-events: none;
 }
 
-.intro {
+.nx-cinematic {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 14px;
+  text-align: center;
+  gap: 18px;
+  padding: 24px;
 }
 
-.intro__logo {
-  width: clamp(70px, 8vw, 95px);
+.nx-cinematic__logo {
+  width: clamp(74px, 8vw, 96px);
   height: auto;
-  display: block;
   opacity: 0;
-  transform: scale(0.96);
-  filter: blur(4px);
-  animation: logoIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: scale(0.92);
+  animation: nxLogoIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-.intro__word {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.04em;
+.nx-cinematic__name-wrap,
+.nx-cinematic__tagline-wrap {
+  overflow: hidden;
+}
+
+.nx-cinematic__name {
+  margin: 0;
   font-family: "Montserrat", sans-serif;
-  font-size: clamp(1rem, 2vw, 1.35rem);
-  font-weight: 700;
-  letter-spacing: 0.22em;
+  font-size: clamp(1.6rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: 0.34em;
   color: #fff;
-  padding-left: 0.22em;
-}
-
-.intro__word span {
-  display: inline-block;
+  padding-left: 0.34em;
   opacity: 0;
-  transform: translateX(26px);
-  filter: blur(6px);
-  animation: letterIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  transform: translateY(110%);
+  animation: nxNameReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.22s;
 }
 
-.intro__word span:nth-child(1) { animation-delay: 0.35s; }
-.intro__word span:nth-child(2) { animation-delay: 0.42s; }
-.intro__word span:nth-child(3) { animation-delay: 0.49s; }
-.intro__word span:nth-child(4) { animation-delay: 0.56s; }
-.intro__word span:nth-child(5) { animation-delay: 0.63s; }
-.intro__word span:nth-child(6) { animation-delay: 0.70s; }
-.intro__word span:nth-child(7) { animation-delay: 0.77s; }
-.intro__word span:nth-child(8) { animation-delay: 0.84s; }
+.nx-cinematic__tagline {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(150, 150, 150, 0.92);
+  opacity: 0;
+  transform: translateY(120%);
+  animation: nxTagReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.75s;
+}
 
-@keyframes logoIn {
+@keyframes nxLogoIn {
   from {
     opacity: 0;
-    transform: scale(0.96);
-    filter: blur(4px);
+    transform: scale(0.92);
   }
   to {
     opacity: 1;
     transform: scale(1);
-    filter: blur(0);
   }
 }
 
-@keyframes letterIn {
+@keyframes nxNameReveal {
   from {
     opacity: 0;
-    transform: translateX(26px);
-    filter: blur(6px);
+    transform: translateY(110%);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
-    filter: blur(0);
+    transform: translateY(0);
+  }
+}
+
+@keyframes nxTagReveal {
+  from {
+    opacity: 0;
+    transform: translateY(120%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 /* SERVICES */
