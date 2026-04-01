@@ -1,24 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   // =========================
-  // LOADER
-  // =========================
-  const introStart = Date.now();
-
-  window.addEventListener("load", () => {
-    const loader = document.getElementById("loader");
-    const minDuration = 2600;
-    const elapsed = Date.now() - introStart;
-    const remaining = Math.max(0, minDuration - elapsed);
-
-    setTimeout(() => {
-      document.body.classList.remove("is-loading");
-      document.body.classList.add("is-ready");
-      if (loader) loader.classList.add("hide");
-    }, remaining);
-  });
-
-  // =========================
   // CARROSSEL
   // =========================
   const carousel = document.querySelector(".nexortek-carousel");
@@ -270,4 +252,26 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.textContent = "Enviar pedido";
         }
     });
+    
+  // =========================
+  // MENU: esconder ao descer, mostrar ao subir
+  // =========================
+  const bannerMenu = document.querySelector(".nexortek__banner__menu");
+  let lastScrollY = window.scrollY;
+
+  if (bannerMenu) {
+    window.addEventListener("scroll", () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY <= 40) {
+        bannerMenu.classList.remove("is-hidden");
+      } else if (currentScrollY > lastScrollY) {
+        bannerMenu.classList.add("is-hidden");
+      } else {
+        bannerMenu.classList.remove("is-hidden");
+      }
+
+      lastScrollY = currentScrollY;
+    }, { passive: true });
+  }
 });

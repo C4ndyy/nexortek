@@ -195,6 +195,7 @@ p {
   padding-top: 140px;
   padding-bottom: 100px;
   position: relative;
+  overflow: hidden;
 }
 
 .nexortek__banner__wrapper {
@@ -219,7 +220,25 @@ p {
   justify-content: center;
   border: 1px solid var(--border-color);
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.3s ease, opacity 0.4s ease, visibility 0.4s ease, transform 0.4s ease;
+}
+
+.nexortek__banner__logo img {
+  width: 34px;
+}
+
+body.intro3d-entered .nexortek__banner__logo {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+body.intro-done .nexortek__banner__logo {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .nexortek__banner__logo:hover {
@@ -241,6 +260,14 @@ p {
   border: 1px solid var(--border-color);
   border-radius: 999px;
   padding: 10px 18px;
+  transition: transform 0.35s ease, opacity 0.35s ease, visibility 0.35s ease;
+}
+
+.nexortek__banner__menu.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-18px);
+  pointer-events: none;
 }
 
 .nexortek__banner__menu-items {
@@ -282,111 +309,240 @@ p {
   flex-wrap: wrap;
 }
 
-/* INTRO */
-
-#loader {
+.nexortek__intro3d {
   position: fixed;
   inset: 0;
-  z-index: 999999;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(circle at top left, rgba(47, 107, 255, 0.18), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(47, 107, 255, 0.1), transparent 25%),
-    var(--bg-color);
+  z-index: 9998;
+  background: #050816;
+  overflow: hidden;
   opacity: 1;
   visibility: visible;
-  transition: opacity 0.85s ease, visibility 0.85s ease;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
 }
 
-#loader.hide {
+.nexortek__intro3d.is-hidden {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
-.nx-cinematic {
+.nexortek__intro3d-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.nexortek__intro3d-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.nexortek__intro3d-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  background:
+    radial-gradient(circle at center, rgba(5, 8, 22, 0.12), rgba(5, 8, 22, 0.55)),
+    linear-gradient(180deg, rgba(5, 8, 22, 0.15), rgba(5, 8, 22, 0.78));
+}
+
+.nexortek__intro3d-logo {
+  width: 42px;
+  height: 42px;
+  filter: brightness(0) invert(1);
+}
+
+.nexortek__intro3d-copy {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
   align-items: center;
-  text-align: center;
-  gap: 18px;
-  padding: 24px;
+  text-align: left;
 }
 
-.nx-cinematic__logo {
-  width: clamp(74px, 8vw, 96px);
-  height: auto;
-  opacity: 0;
-  transform: scale(0.92);
-  animation: nxLogoIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.nexortek__intro3d-copy-text p {
+  font-size: 18px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.72);
+  max-width: 520px;
+  margin-left: auto;
+  font-family: "Montserrat", sans-serif;
 }
 
-.nx-cinematic__name-wrap,
-.nx-cinematic__tagline-wrap {
+.nexortek__intro3d-enter {
+  transform: translateX(-50%);
+  left: 50%;
+  position: absolute;
+  bottom: 62px;
+  align-self: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 18px 28px;
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+}
+
+body.intro3d-active {
+  overflow: hidden;
+  height: 100vh;
+  touch-action: none;
+}
+
+body.intro3d-entered .nexortek-website {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.intro3d-entered .intro-loader__logo {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* INTRO */
+body.intro-active {
   overflow: hidden;
 }
 
-.nx-cinematic__name {
-  margin: 0;
-  font-family: "Montserrat", sans-serif;
-  font-size: clamp(1.6rem, 4vw, 3.2rem);
-  font-weight: 800;
-  letter-spacing: 0.34em;
-  color: #fff;
-  padding-left: 0.34em;
+.intro-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0b0b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+
+.intro-loader.is-hidden {
   opacity: 0;
-  transform: translateY(110%);
-  animation: nxNameReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.22s;
+  visibility: hidden;
+  pointer-events: none;
 }
 
-.nx-cinematic__tagline {
-  margin: 0;
-  font-family: "Montserrat", sans-serif;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: rgba(150, 150, 150, 0.92);
+.intro-loader__inner {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-loader__logo {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
   opacity: 0;
-  transform: translateY(120%);
-  animation: nxTagReveal 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0.75s;
+  filter: brightness(0) invert(1);
+  transition:
+    opacity 0.25s ease,
+    top 0.9s ease,
+    left 0.9s ease,
+    transform 0.9s ease,
+    filter 0.4s ease;
+  will-change: top, left, transform, opacity, filter;
+  z-index: 10001;
+  cursor: pointer;
 }
 
-@keyframes nxLogoIn {
-  from {
-    opacity: 0;
-    transform: scale(0.92);
+body.intro-logo-visible .intro-loader__logo {
+  opacity: 1;
+}
+
+.intro-loader__bar-wrap {
+  width: 180px;
+  max-width: 70vw;
+  margin-top: 20px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.intro-loader__bar-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.intro-loader__bar {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.intro-loader__bar-fill {
+  width: 0%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 999px;
+  transition: width 2.2s ease;
+}
+
+/* fase 1: logo sobe um bocadinho */
+body.intro-step-1 .intro-loader__logo {
+  transform: translate(-50%, calc(-50% - 22px));
+}
+
+
+/* fase 2: quando acaba, sobe mais */
+body.intro-step-2 .intro-loader__logo,
+body.intro-done .intro-loader__logo {
+  transform: translateY(-32vh) scale(0.96);
+}
+
+/* conteúdo do site escondido no início */
+.nexortek-website {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+/* quando a intro acaba */
+body.intro-done .nexortek-website {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.intro-done {
+  overflow: auto;
+}
+
+@media (max-width: 900px) {
+  .nexortek__intro3d-copy {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+
+  .nexortek__intro3d-copy-title h2 {
+    font-size: 46px;
+  }
+
+  .nexortek__intro3d-copy-text p {
+    margin-left: 0;
+    max-width: none;
   }
 }
 
-@keyframes nxNameReveal {
-  from {
-    opacity: 0;
-    transform: translateY(110%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes nxTagReveal {
-  from {
-    opacity: 0;
-    transform: translateY(120%);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 /* SERVICES */
 
 .nexortek__services {

@@ -27,28 +27,51 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet" />
 </head>
 
-<body>  
+<body class="intro-active">
 
-  <div id="loader" aria-hidden="true">
-    <div class="nx-cinematic">
-      <img src="assets/logo-web.png" alt="Nexortek logo" class="nx-cinematic__logo" />
-      <div class="nx-cinematic__name-wrap">
-        <h1 class="nx-cinematic__name">NEXORTEK</h1>
+  <div class="intro-loader" id="introLoader">
+    <div class="intro-loader__inner">
+      <div class="intro-loader__bar-wrap" id="introBarWrap">
+        <div class="intro-loader__bar">
+          <div class="intro-loader__bar-fill" id="introBarFill"></div>
+        </div>
       </div>
-      <div class="nx-cinematic__tagline-wrap">
-        <p class="nx-cinematic__tagline">Marketing, com impacto diferente</p>
+    </div>
+  </div>
+
+  <img src="assets/logo-web.png" alt="Nexortek logo" class="intro-loader__logo" id="introLogo" />
+
+  <div class="nexortek__intro3d" id="intro3d">
+
+    <div class="nexortek__intro3d-canvas" id="hero3d"></div>
+
+    <div class="nexortek__intro3d-overlay" id="intro3dOverlay">
+      <div class="nexortek__intro3d-copy montserrat">
+        <div class="nexortek__intro3d-copy-title">
+          <h2>NEXORTEK</h2>
+        </div>
+
+        <div class="nexortek__intro3d-copy-text">
+          <p>
+            Reimaginamos a excelência do design. Sem apresentações. Sem propostas.
+            Sem teatro. Apenas trabalho excecional de uma equipa que se torna
+            uma extensão do teu negócio.
+          </p>
+        </div>
       </div>
+      <div class="nexortek__intro3d-enter">CLICK ANYWHERE TO ENTER</div>
     </div>
   </div>
 
   <div class="nexortek-website">
 
-    <!-- HERO / BANNER -->
     <div class="nexortek__banner section" id="banner">
       <div class="nexortek__banner__wrapper">
-        <div class="nexortek__banner__logo" onclick="homepage()">
+      
+        <div class="nexortek__banner__logo" id="floatingLogo" onclick="homepage()">
           <img src="assets/logo-web.png" alt="Nexortek logo" />
         </div>
 
@@ -373,6 +396,8 @@
     }
   </script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script src="loader.js"></script>
+  <script type="module" src="hero-3d.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
