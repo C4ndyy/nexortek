@@ -3,15 +3,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   // LOADER
   // =========================
-  const loader = document.getElementById("loader");
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("loader");
 
-  if (loader) {
-    window.addEventListener("load", () => {
+    if (loader) {
       setTimeout(() => {
         loader.classList.add("hide");
-      }, 1400);
-    });
-  }
+      }, 2200);
+    }
+  });
 
   // =========================
   // CARROSSEL
