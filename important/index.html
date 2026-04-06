@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
+  <title>Coração Surpresa</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #2a1530 0%, #160b1b 40%, #09050d 100%);
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: manipulation;
+      color: white;
+    }
+
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .glow {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, rgba(255, 90, 140, 0.08), transparent 42%);
+      filter: blur(20px);
+    }
+
+    .heart-stage {
+    position: absolute;
+    left: 50%;
+    top: 36%;
+    transform: translate(-50%, -50%);
+    width: 250px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+    .heart-shell {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    transition:
+        clip-path 1.4s ease,
+        transform 0.8s ease,
+        opacity 1.4s ease,
+        filter 1.2s ease;
+    filter: drop-shadow(0 0 20px rgba(255, 72, 132, 0.28));
+    }
+
+    .heart-shell svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    }
+
+    .heart-shell.burning {
+    animation: heartPop 0.22s linear 6;
+    clip-path: circle(0% at 50% 50%);
+    opacity: 0;
+    transform: scale(1.12);
+    filter:
+        brightness(1.15)
+        saturate(1.15)
+        drop-shadow(0 0 28px rgba(255, 120, 70, 0.45));
+    }
+
+    .heart-burn-glow {
+      position: absolute;
+      width: 64vw;
+      height: 64vw;
+      max-width: 260px;
+      max-height: 260px;
+      min-width: 180px;
+      min-height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 190, 90, 0.85), rgba(255, 80, 40, 0.35), transparent 70%);
+      opacity: 0;
+      transform: scale(0.4);
+      transition: all 1.2s ease;
+      z-index: 4;
+      pointer-events: none;
+      filter: blur(10px);
+    }
+
+    .heart-burn-glow.active {
+      opacity: 1;
+      transform: scale(1.5);
+    }
+
+    .inner-box {
+      position: absolute;
+      width: 54vw;
+      height: 36vw;
+      max-width: 235px;
+      max-height: 160px;
+      min-width: 170px;
+      min-height: 110px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fff7ef 0%, #ffe7d1 100%);
+      box-shadow:
+        0 16px 30px rgba(0,0,0,0.28),
+        inset 0 0 0 2px rgba(180, 110, 60, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+      opacity: 0;
+      transform: scale(0.6) translateY(24px);
+      transition: all 1.2s ease;
+      z-index: 2;
+    }
+
+    .inner-box.show {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+
+    .inner-box::before {
+      content: "";
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+      border: 2px dashed rgba(170, 95, 58, 0.25);
+      border-radius: 14px;
+      pointer-events: none;
+    }
+
+    .message {
+      color: #8d2347;
+      font-size: clamp(1.1rem, 4.3vw, 1.55rem);
+      font-weight: 700;
+      line-height: 1.25;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.8);
+    }
+
+    .label {
+      position: absolute;
+      left: 50%;
+      bottom: 24dvh;
+      transform: translateX(-50%);
+      font-size: clamp(1rem, 4vw, 1.2rem);
+      font-weight: 700;
+      color: #ffd8a8;
+      text-shadow: 0 0 10px rgba(255, 190, 120, 0.2);
+      white-space: nowrap;
+    }
+
+    .arrow {
+      position: absolute;
+      left: 50%;
+      bottom: calc(24dvh - 28px);
+      width: 6px;
+      height: 44px;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #ffd27b, #ff9e63);
+      border-radius: 999px;
+      box-shadow: 0 0 14px rgba(255, 181, 91, 0.3);
+    }
+
+    .arrow::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      transform: translateX(-50%);
+      border-top: 16px solid #ffb26b;
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+    }
+
+    .strike-zone {
+      position: absolute;
+      left: 50%;
+      bottom: 12dvh;
+      transform: translateX(-50%);
+      width: min(62vw, 260px);
+      height: 70px;
+      min-height: 70px;
+      border-radius: 16px;
+      background:
+        repeating-linear-gradient(
+          -25deg,
+          #5d3a26 0 10px,
+          #7f4f34 10px 20px
+        );
+      border: 2px solid rgba(255, 212, 168, 0.3);
+      box-shadow:
+        inset 0 0 15px rgba(0,0,0,0.35),
+        0 10px 18px rgba(0,0,0,0.25);
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+      z-index: 5;
+    }
+
+    .strike-zone:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+
+    .strike-zone span {
+      color: #ffe5c1;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+    }
+
+    .strike-zone.disabled {
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .match {
+      position: absolute;
+      width: 34vw;
+      max-width: 145px;
+      min-width: 110px;
+      height: 16px;
+      left: calc(50% - 18vw);
+      bottom: calc(12dvh + 44px);
+      transform-origin: 16px center;
+      transform: rotate(-18deg);
+      z-index: 8;
+      transition:
+        transform 1s ease,
+        left 1.5s ease,
+        bottom 1.5s ease;
+    }
+
+    .stick {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: calc(100% - 18px);
+      height: 8px;
+      background: linear-gradient(90deg, #eec58b, #c7924f);
+      border-radius: 10px;
+      box-shadow: inset 0 -1px 1px rgba(0,0,0,0.2);
+    }
+
+    .tip {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 22px;
+      height: 16px;
+      background: linear-gradient(180deg, #8b3021, #562116);
+      border-radius: 10px;
+      box-shadow: inset 0 -2px 2px rgba(0,0,0,0.25);
+    }
+
+    .match.lighting {
+      animation: scratch 0.7s ease-in-out 1;
+    }
+
+    .match.to-heart {
+      left: 50%;
+      bottom: 53dvh;
+      transform: translateX(-18%) rotate(-52deg) scale(1.02);
+    }
+
+    .flame {
+      position: absolute;
+      right: -10px;
+      top: -26px;
+      width: 32px;
+      height: 46px;
+      opacity: 0;
+      transform: scale(0.4);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      filter: drop-shadow(0 0 10px rgba(255, 176, 66, 0.6));
+    }
+
+    .flame.on {
+      opacity: 1;
+      transform: scale(1);
+      animation: flicker 0.18s infinite alternate;
+    }
+
+    .flame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 70%, #fff5b8 0 18%, #ffbf4d 30%, #ff7a21 58%, rgba(255, 80, 10, 0.2) 75%, transparent 76%);
+      clip-path: polygon(50% 0%, 67% 19%, 80% 42%, 77% 64%, 60% 87%, 50% 100%, 39% 85%, 25% 61%, 20% 40%, 33% 18%);
+    }
+
+    .sparks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9;
+    }
+
+    .spark {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff3b6 0%, #ffab41 70%, rgba(255, 118, 39, 0.2) 100%);
+      opacity: 0;
+      box-shadow: 0 0 10px rgba(255, 166, 74, 0.6);
+    }
+
+    .smoke {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(180,180,180,0.18);
+      filter: blur(6px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 7;
+    }
+
+    .instructions {
+      position: absolute;
+      left: 50%;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      width: 88vw;
+      text-align: center;
+      color: rgba(255,255,255,0.72);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    @keyframes heartPop {
+    0%   { transform: scale(1); }
+    25%  { transform: scale(1.03); }
+    50%  { transform: scale(0.99); }
+    75%  { transform: scale(1.04); }
+    100% { transform: scale(1); }
+    }
+
+    @keyframes scratch {
+      0% { transform: rotate(-18deg) translate(0,0); }
+      20% { transform: rotate(-15deg) translate(8px, 4px); }
+      40% { transform: rotate(-23deg) translate(24px, -2px); }
+      60% { transform: rotate(-14deg) translate(15px, 3px); }
+      100% { transform: rotate(-18deg) translate(0,0); }
+    }
+
+    @keyframes flicker {
+      from { transform: scale(1) rotate(-2deg); }
+      to { transform: scale(1.08) rotate(2deg); }
+    }
+
+    @keyframes shake {
+      0% { transform: rotate(-45deg) translate(0,0); }
+      25% { transform: rotate(-45deg) translate(2px,-1px); }
+      50% { transform: rotate(-45deg) translate(-2px,2px); }
+      75% { transform: rotate(-45deg) translate(1px,-2px); }
+      100% { transform: rotate(-45deg) translate(0,0); }
+    }
+
+    @media (min-width: 700px) {
+      .scene {
+        max-width: 430px;
+        max-height: 920px;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="glow"></div>
+
+    <div class="heart-stage">
+      <div class="heart-burn-glow" id="heartGlow"></div>
+      <div class="inner-box" id="innerBox">
+        <div class="message">Amo-te para sempre pepe</div>
+      </div>
+      <div class="heart-shell" id="heart" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none">
+    <defs>
+      <linearGradient id="heartGradient" x1="0" y1="0" x2="24" y2="24">
+        <stop offset="0%" stop-color="#ff72a5"></stop>
+        <stop offset="55%" stop-color="#ff4f88"></stop>
+        <stop offset="100%" stop-color="#cc124d"></stop>
+      </linearGradient>
+    </defs>
+    <path
+      d="M11.998 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54l-1.452 1.31z"
+      fill="url(#heartGradient)"
+    />
+    <path
+      d="M12 5.4c1.15-1.45 2.66-2.1 4.15-2.1 2.37 0 4.15 1.88 4.15 4.2 0 3.03-2.9 5.73-8.3 10.62-5.4-4.89-8.3-7.59-8.3-10.62 0-2.32 1.78-4.2 4.15-4.2 1.49 0 3 .65 4.15 2.1z"
+      fill="rgba(255,255,255,0.08)"
+    />
+  </svg>
+</div>
+    </div>
+
+    <div class="label">Toca aqui</div>
+    <div class="arrow"></div>
+
+    <div class="strike-zone" id="strikeZone" aria-label="Raspa aqui">
+      <span>Raspa aqui</span>
+    </div>
+
+    <div class="match" id="match">
+      <div class="stick"></div>
+      <div class="tip"></div>
+      <div class="flame" id="flame"></div>
+    </div>
+
+    <div class="sparks" id="sparks"></div>
+
+    <div class="instructions">
+      Toca em “Raspa aqui” para acender o fósforo e revelar a surpresa.
+    </div>
+  </div>
+
+  <script>
+    const strikeZone = document.getElementById("strikeZone");
+    const match = document.getElementById("match");
+    const flame = document.getElementById("flame");
+    const heart = document.getElementById("heart");
+    const innerBox = document.getElementById("innerBox");
+    const heartGlow = document.getElementById("heartGlow");
+    const sparks = document.getElementById("sparks");
+    const scene = document.querySelector(".scene");
+
+    let started = false;
+
+    function createSpark(x, y, spread = 90, count = 14) {
+      for (let i = 0; i < count; i++) {
+        const s = document.createElement("div");
+        s.className = "spark";
+        s.style.left = x + "px";
+        s.style.top = y + "px";
+        sparks.appendChild(s);
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 18 + Math.random() * spread;
+        const dx = Math.cos(angle) * distance;
+        const dy = Math.sin(angle) * distance;
+
+        s.animate(
+          [
+            { transform: "translate(0,0) scale(1)", opacity: 1 },
+            { transform: `translate(${dx}px, ${dy}px) scale(0.2)`, opacity: 0 }
+          ],
+          {
+            duration: 500 + Math.random() * 450,
+            easing: "cubic-bezier(.2,.7,.3,1)"
+          }
+        );
+
+        setTimeout(() => s.remove(), 1000);
+      }
+    }
+
+    function createSmoke(x, y, amount = 7) {
+      for (let i = 0; i < amount; i++) {
+        const smoke = document.createElement("div");
+        smoke.className = "smoke";
+        smoke.style.left = x + "px";
+        smoke.style.top = y + "px";
+        scene.appendChild(smoke);
+
+        const dx = (Math.random() - 0.5) * 70;
+        const dy = -50 - Math.random() * 70;
+        const scale = 0.8 + Math.random() * 1.6;
+
+        smoke.animate(
+          [
+            { transform: "translate(0,0) scale(0.6)", opacity: 0.24 },
+            { transform: `translate(${dx}px, ${dy}px) scale(${scale})`, opacity: 0 }
+          ],
+          {
+            duration: 1100 + Math.random() * 700,
+            easing: "ease-out"
+          }
+        );
+
+        setTimeout(() => smoke.remove(), 2200);
+      }
+    }
+
+    function startAnimation() {
+      if (started) return;
+      started = true;
+      strikeZone.classList.add("disabled");
+
+      const strikeRect = strikeZone.getBoundingClientRect();
+      const sceneRect = scene.getBoundingClientRect();
+
+      const sparkX = strikeRect.left - sceneRect.left + strikeRect.width / 2;
+      const sparkY = strikeRect.top - sceneRect.top + strikeRect.height / 2;
+
+      match.classList.add("lighting");
+      createSpark(sparkX, sparkY, 60, 18);
+
+      setTimeout(() => {
+        flame.classList.add("on");
+        createSmoke(sparkX + 10, sparkY - 10, 5);
+      }, 450);
+
+      setTimeout(() => {
+        match.classList.remove("lighting");
+        match.classList.add("to-heart");
+      }, 780);
+
+      setTimeout(() => {
+        const heartRect = heart.getBoundingClientRect();
+        const hx = heartRect.left - sceneRect.left + heartRect.width / 2;
+        const hy = heartRect.top - sceneRect.top + heartRect.height / 2;
+
+        createSpark(hx, hy, 100, 24);
+        createSmoke(hx, hy, 9);
+        heartGlow.classList.add("active");
+      }, 2100);
+
+      setTimeout(() => {
+        heart.classList.add("burning");
+      }, 2400);
+
+      setTimeout(() => {
+        innerBox.classList.add("show");
+      }, 3200);
+
+      setTimeout(() => {
+      flame.classList.remove("on");
+      match.style.transition += ", opacity 0.8s ease, transform 0.8s ease";
+      match.style.opacity = "0";
+      match.style.transform += " scale(0.85)";
+      }, 3400);
+    }
+
+    strikeZone.addEventListener("click", startAnimation, { passive: true });
+    strikeZone.addEventListener("touchstart", startAnimation, { passive: true });
+  </script>
+</body>
+</html>
